@@ -60,7 +60,6 @@ var MainScene = cc.Layer.extend({
         var descLab = cell.lzDesc;
         var lzAvatar = cell.lzAvatar;
         var btnLab = cell.lzLabelBtn;
-        var bgLayer = cell.bgLayer;
 
 
         nameLab.setPosition(10, h - 46);
@@ -75,21 +74,24 @@ var MainScene = cc.Layer.extend({
         btnLab.setPosition(75, 43);
 
         if (!isNormal) {
-            var node = new cc.LayerColor(cc.color(255, 255, 255, 255), w, 1980);
-            cell.addChild(node);
-            node.setPosition(0, 76);
+            var showNode = cell.showNode = new cc.LayerColor(cc.color(255, 255, 255, 255), w, 1980);
+            cell.addChild(showNode);
+            showNode.setPosition(0, 76);
 
-            for (var i = 0;i < 9; i++){
+            for (var i = 0; i < 9; i++) {
                 var cnode = this._createExtraCell();
-                cnode.setPosition(0,220 * i);
-                node.addChild(cnode);
+                cnode.setPosition(0, 220 * i);
+                showNode.addChild(cnode);
             }
 
+        } else if (cell.showNode) {
+            cell.showNode.removeFromParent();
+            cell.showNode = null;
         }
 
     },
 
-    _createExtraCell:function () {
+    _createExtraCell: function () {
         var cell = new cc.Node();
         var cellSize = this._cellInSize;
 
@@ -132,26 +134,22 @@ var MainScene = cc.Layer.extend({
             colorLayer.setPosition(0, 10);
 
             var nameLabel = cell.lzName = new cc.LabelTTF("aaaaa", "Arial", 30);
-
             nameLabel.setAnchorPoint(0, 0.5);
             nameLabel.setFontFillColor(cc.color(225, 87, 12));
             colorLayer.addChild(nameLabel);
 
             var rank = cell.lzRank = new cc.LabelTTF("bbbbbb", "Arial", 20);
-
             rank.setAnchorPoint(0, 0.5);
             rank.setFontFillColor(cc.color(225, 87, 12));
             colorLayer.addChild(rank);
 
             var desc = cell.lzDesc = new cc.LabelTTF("cccccc", "Arial", 20);
-
             desc.setAnchorPoint(0, 0.5);
             desc.setFontFillColor(cc.color(225, 87, 12));
             colorLayer.addChild(desc);
 
 
             var avatar = cell.lzAvatar = new cc.Sprite("#poker_back.png");
-
             cell.addChild(avatar);
 
 
@@ -168,6 +166,7 @@ var MainScene = cc.Layer.extend({
             colorLayer.addChild(lbBtn);
 
             this.initTableCell(cell, true);
+
         }
         return cell;
     },
